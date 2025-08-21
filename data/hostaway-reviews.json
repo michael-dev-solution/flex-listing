@@ -1,0 +1,54 @@
+{
+	"status": "success",
+	"result": [
+		{
+			"id": 7453,
+			"type": "host-to-guest",
+			"status": "published",
+			"rating": null,
+			"publicReview": "Shane and family are wonderful! Would definitely host again :)",
+			"reviewCategory": [
+				{ "category": "cleanliness", "rating": 10 },
+				{ "category": "communication", "rating": 10 },
+				{ "category": "respect_house_rules", "rating": 10 }
+			],
+			"submittedAt": "2020-08-21 22:45:14",
+			"guestName": "Shane Finkelstein",
+			"listingName": "2B N1 A - 29 Shoreditch Heights",
+			"listingId": "shoreditch-heights-2b-n1-a",
+			"channel": "airbnb"
+		},
+		{
+			"id": 7454,
+			"type": "guest-to-host",
+			"status": "published",
+			"rating": 5,
+			"publicReview": "Great stay, very clean and central.",
+			"reviewCategory": [
+				{ "category": "cleanliness", "rating": 10 },
+				{ "category": "location", "rating": 9 }
+			],
+			"submittedAt": "2020-09-01 12:05:00",
+			"guestName": "Alex J",
+			"listingName": "2B N1 A - 29 Shoreditch Heights",
+			"listingId": "shoreditch-heights-2b-n1-a",
+			"channel": "booking"
+		},
+		{
+			"id": 8001,
+			"type": "guest-to-host",
+			"status": "published",
+			"rating": 4,
+			"publicReview": "Nice place but a bit noisy on weekends.",
+			"reviewCategory": [
+				{ "category": "location", "rating": 7 },
+				{ "category": "value", "rating": 8 }
+			],
+			"submittedAt": "2020-10-05 08:30:10",
+			"guestName": "Priya",
+			"listingName": "Camden Loft B2",
+			"listingId": "camden-loft-b2",
+			"channel": "direct"
+		}
+	]
+} 
