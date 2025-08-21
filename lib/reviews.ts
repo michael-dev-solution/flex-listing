@@ -42,6 +42,7 @@ export async function getNormalizedListings(): Promise<NormalizedListing[]> {
 		try {
 			const approvalPromises = normalized.map(r => isApproved(r.id));
 			approvals = await Promise.all(approvalPromises);
+			console.log('Approvals loaded:', { totalReviews: normalized.length, approvedCount: approvals.filter(Boolean).length });
 		} catch (error) {
 			console.error('Error fetching approval statuses:', error);
 			// Fallback to all false if approvals fail
