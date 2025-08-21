@@ -34,10 +34,20 @@ export async function getNormalizedListings(): Promise<NormalizedListing[]> {
 	// Try Hostaway sandbox; fallback to local mock if empty
 	const remote = await fetchHostawayRaw();
 	const raw = remote.length > 0 ? remote : (Array.isArray((mock as any).result) ? (mock as any).result : []);
-	const normalized = normalizeHostawayReviews(raw).map(r => ({ ...r, approved: isApproved(r.id) }));
+	const normalized = normalizeHostawayReviews(raw);
+	
+	// Get all approval statuses
+	const approvalPromises = normalized.map(r => isApproved(r.id));
+	const approvals = await Promise.all(approvalPromises);
+	
+	// Map normalized reviews with approval status
+	const normalizedWithApprovals = normalized.map((r, index) => ({ 
+		...r, 
+		approved: approvals[index] ?? false 
+	}));
 
-	const listingsMap = new Map<string, { listingId: string; listingName: string | null; channels: Set<string>; reviews: typeof normalized }>();
-	for (const r of normalized) {
+	const listingsMap = new Map<string, { listingId: string; listingName: string | null; channels: Set<string>; reviews: typeof normalizedWithApprovals }>();
+	for (const r of normalizedWithApprovals) {
 		const key = r.listingId;
 		if (!listingsMap.has(key)) {
 			listingsMap.set(key, { listingId: r.listingId, listingName: r.listingName, channels: new Set<string>(), reviews: [] as any });
