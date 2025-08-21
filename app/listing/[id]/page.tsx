@@ -1,16 +1,38 @@
-import type { NormalizedListing } from "@/lib/types";
-import { getNormalizedListings } from "@/lib/reviews";
+"use client";
 
-async function getData(): Promise<NormalizedListing[]> {
-	return await getNormalizedListings();
-}
+import { useEffect, useState } from "react";
+import type { NormalizedListing } from "@/lib/types";
+
+type ApiResponse = {
+	status: string;
+	listings: NormalizedListing[];
+};
 
 const aliasToListingId: Record<string, string> = {
 	"sample-listing": "shoreditch-heights-2b-n1-a"
 };
 
-export default async function ListingPage({ params }: { params: { id: string } }) {
-	const listings = await getData();
+export default function ListingPage({ params }: { params: { id: string } }) {
+	const [listings, setListings] = useState<NormalizedListing[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		fetch("/api/reviews/hostaway")
+			.then(r => r.json())
+			.then((json: ApiResponse) => setListings(json.listings))
+			.catch((e) => setError(String(e?.message ?? e)))
+			.finally(() => setLoading(false));
+	}, []);
+
+	if (loading) {
+		return <div className="space-y-2"><p className="text-sm">Loading...</p></div>;
+	}
+
+	if (error) {
+		return <div className="space-y-2"><p className="text-sm text-red-600">Error: {error}</p></div>;
+	}
+
 	const targetId = aliasToListingId[params.id] ?? params.id;
 	const listing = listings.find(l => l.listingId === targetId || l.listingId === decodeURIComponent(targetId));
 
@@ -18,7 +40,7 @@ export default async function ListingPage({ params }: { params: { id: string } }
 		return (
 			<div className="space-y-2">
 				<h2 className="text-xl font-semibold">Listing not found</h2>
-				<p className="text-sm text-gray-600">We couldn’t find that property.</p>
+				<p className="text-sm text-gray-600">We couldn't find that property.</p>
 				<div className="text-sm text-gray-600">Try one of:
 					<ul className="list-disc ml-5 mt-1">
 						{listings.map(l => (
