@@ -1,17 +1,18 @@
-const approvedReviewIds = new Set<string>();
+import { kv } from '@vercel/kv';
 
-export function isApproved(reviewId: string): boolean {
-	return approvedReviewIds.has(reviewId);
+export async function isApproved(reviewId: string) {
+  return await kv.get<boolean>(`approval:${reviewId}`);
 }
 
-export function setApproval(reviewId: string, approved: boolean): void {
-	if (approved) {
-		approvedReviewIds.add(reviewId);
-	} else {
-		approvedReviewIds.delete(reviewId);
-	}
+export async function setApproval(reviewId: string, approved: boolean) {
+  if (approved) {
+    await kv.set(`approval:${reviewId}`, true);
+  } else {
+    await kv.del(`approval:${reviewId}`);
+  }
 }
 
-export function getAllApprovals(): string[] {
-	return Array.from(approvedReviewIds);
-} 
+export async function getAllApprovals() {
+  const keys = await kv.keys('approval:*');
+  return keys.map(k => k.replace('approval:', ''));
+}
